@@ -20,7 +20,7 @@ module.exports = function lockAndYield(fn, hashfn) {
 
   function await(event) {
     return function (done) {
-      ee.once(event, done)
+      ee.once(event, done.bind(null, null))
     }
   }
 }
