@@ -9,11 +9,11 @@ module.exports = function lockAndYield(fn, hashfn) {
   })
 
   return function* () {
-    var key = hashfn.call(this, arguments)
+    var key = hashfn.apply(this, arguments)
     // in progress, wait until it's called
     if (state[key]) return yield await(key)
     state[key] = true
-    var res = yield* fn.call(this, arguments)
+    var res = yield* fn.apply(this, arguments)
     ee.emit(key, res)
     return res
   }
