@@ -1,0 +1,31 @@
+{
+  "name": "lock-and-yield",
+  "description": "lock generator functions based on a key",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "twitter": "https://twitter.com/jongleberry"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cojs/lock-and-yield.git"
+  },
+  "bugs": {
+    "mail": "me@jongleberry.com",
+    "url": "https://github.com/cojs/lock-and-yield/issues"
+  },
+  "devDependencies": {
+    "mocha": "^1.17.0",
+    "should": "^3.0.0",
+    "co": "^3.0.0"
+  },
+  "scripts": {
+    "test": "mocha --require should --reporter spec --harmony-generators"
+  },
+  "engines": {
+    "node": ">= 0.11.4"
+  }
+}
