@@ -14,6 +14,7 @@ module.exports = function lockAndYield(fn, hashfn) {
     if (state[key]) return yield await(key)
     state[key] = true
     var res = yield* fn.apply(this, arguments)
+    delete state[key]
     ee.emit(key, res)
     return res
   }
