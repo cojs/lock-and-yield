@@ -9,9 +9,11 @@ describe('lock and yield', function () {
     var fn = lock(function* fn(url, timeout) {
       calls++
       yield wait(timeout || 10)
+
+      return timeout
     })
 
-    yield [
+    var result = yield [
       fn('a', 0),
       fn('a', 1),
       fn('a', 2),
@@ -20,6 +22,7 @@ describe('lock and yield', function () {
     ]
 
     assert.equal(calls, 1)
+    assert.equal(result.join(""), "00000")
   }))
 })
 

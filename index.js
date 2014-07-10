@@ -1,31 +1,38 @@
-
-var EventEmitter = require('events').EventEmitter
+"use strict";
 
 module.exports = function lockAndYield(fn, hashfn) {
-  hashfn = hashfn || defaultHashFn
-  var state = Object.create(null)
-  var ee = new EventEmitter({
-    maxListeners: Infinity
-  })
+  hashfn = hashfn || defaultHashFn;
+  var cache = Object.create(null);
 
   return function* () {
-    var key = hashfn.apply(this, arguments)
-    // in progress, wait until it's called
-    if (state[key]) return yield await(key)
-    state[key] = true
-    var res = yield* fn.apply(this, arguments)
-    delete state[key]
-    ee.emit(key, res)
-    return res
-  }
 
-  function await(event) {
-    return function (done) {
-      ee.once(event, done.bind(null, null))
+    var key = hashfn.apply(this, arguments);
+
+    if (cache[key] && cache[key].state) {
+      // in progress, wait until it's called
+      return yield await(key);
     }
+
+    cache[key] = { waits: [], state: true };
+
+    var res = yield* fn.apply(this, arguments);
+
+    // finish waits
+    cache[key].waits.forEach(function(fn){ fn(res); });
+    delete cache[key];
+
+    return res;
+  };
+
+  function await(key) {
+    return function (done) {
+      cache[key]['waits'].push(function(result){
+        done(null, result);
+      });
+    };
   }
-}
+};
 
 function defaultHashFn() {
-  return String.call(arguments[0])
+  return String.call(arguments[0]);
 }
