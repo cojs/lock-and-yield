@@ -34,16 +34,25 @@ describe('lock and yield', function () {
       throw new Error("This some error happened")
     })
 
+    var runed;
+    var fn1 = function* (){
+      yield wait(20)
+      runed = true
+      return 3
+    }
+
     try {
       var result = yield [
         fn('a', 0),
-        fn('a', 1),
+        fn1(),
         fn('a', 2),
         fn('a', 3),
         fn('a', 4),
       ]
-    } catch(e) {}
+    } catch(e) {
+    }
 
+    assert.equal(runed, undefined)
     assert.equal(calls, 1)
     assert.equal(result, undefined)
   }))
