@@ -1,5 +1,9 @@
 module.exports = function lockAndYield(fn, hashfn) {
-  hashfn = hashfn || defaultHashFn
+  if (typeof hashfn === 'number') {
+    hashfn = defaultHashFn(hashfn)
+  }
+
+  hashfn = hashfn || defaultHashFn()
   var cache = Object.create(null)
 
   return function* () {
@@ -31,6 +35,9 @@ module.exports = function lockAndYield(fn, hashfn) {
   }
 }
 
-function defaultHashFn() {
-  return String.call(arguments[0])
+function defaultHashFn(number) {
+  number = number || 0;
+  return function() {
+    return String.call(arguments[0])
+  }
 }
