@@ -56,6 +56,26 @@ describe('lock and yield', function () {
     assert.equal(calls, 1)
     assert.equal(result, undefined)
   }))
+
+  it('hashfn could be number, which choose arguments number', function*() {
+    var calls = 0
+    var fn = lock(function* fn(url, timeout) {
+      calls++
+      yield wait(timeout || 10)
+
+      return timeout
+    }, 1)
+
+    var result = yield [
+      fn('a', 1),
+      fn('a', 1),
+      fn('a', 3),
+      fn('a', 3),
+      fn('a', 4)
+    ]
+
+    assert.equal(calls, 3)
+  });
 })
 
 function wait(ms) {

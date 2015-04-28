@@ -27,6 +27,10 @@ co(function* () {
 
 `fn` is a `GeneratorFunction`. `hashfn` is a hashing function based on the arguments passed to `fn`. By default, it is `(arg) -> String(arg)`.
 
+### fn = lock(fn, number)
+
+`hashfn` will be `() -> String(arguments[number])`.
+
 ## License
 
 The MIT License (MIT)
